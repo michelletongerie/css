@@ -1,7 +1,14 @@
 
 <html>
     <head>
-    <link rel="https://raw.githubusercontent.com/michelletongerie/css/main/test.css">
+      <script>
+var head = jQuery("#myiFrame").contents().find("head");
+var css = '<style type="text/css">' +
+          '.donation-form__other-field {display:none!important}; ' +
+          '</style>';
+jQuery(head).append(css);
+
+        </script>
     </head>
     <body>
     test
