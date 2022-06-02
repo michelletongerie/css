@@ -2,11 +2,13 @@
 <html>
     <head>
       <script>
-var head = jQuery("#myiFrame").contents().find("head");
-var css = '<style type="text/css">' +
-          '.donation-form__other-field {display:none!important}; ' +
-          '</style>';
-jQuery(head).append(css);
+
+
+window.onload = function() {
+   let myiFrame = document.getElementById("myiFrame");
+   let doc = myiFrame.contentDocument;
+   doc.body.innerHTML = doc.body.innerHTML + '<style>.donation-form__other-field {display:none!important}; </style>';
+}
 
         </script>
 
