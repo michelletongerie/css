@@ -1,9 +1,5 @@
-.donation-form__other-field {
+#myiFrame .donation-form__other-field {
     color:pink!important;
     font-size:90px!important;
 }
 
-#mytest {
-    color:pink!important;
-    font-size:90px!important;
-}
