@@ -1,0 +1,52 @@
+<html>
+    <head>
+
+        <style type="text/css" id="cssID">
+            .donation-form__body
+            {
+                background-color: red;
+            }
+
+            #max {
+                width: 100vw;
+                background: red;
+            }
+
+
+            #raisely-root div{max-width: 100vw!important;} /*this is where there is a max-width set*/
+
+            </style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $("#iFrameID").contents().find("head")[0].appendChild(cssID);
+        //Or $("#iFrameID").contents().find("head")[0].appendChild($('#cssID')[0]);
+    });
+</script>
+
+    </head>
+    <body>
+
+
+
+    <iframe id="iFrameID" width="560" height="315"></iframe> 
+        
+  <!--     <iframe id="iFrameID"
+        src="https://vanilla-donation-form.raisely.com/embed?targethost=https://vanilla-donation-form.raisely.com/donate-embed" 
+        
+        style="border: none;" 
+        width=100% 
+        height="920"
+        scrolling="yes"
+      allowfullscreen="true"
+        >
+</iframe> -->
+
+<div id="max">
+<!-- <div class="raisely-donate" data-campaign-path="vanilla-donation-form" data-width="100%" data-height="800"><script src="https://cdn.raisely.com/v3/public/embed.js"></script></div>
+</div> -->
+
+    </body>
+    </html>
