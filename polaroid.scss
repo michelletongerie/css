@@ -1,0 +1,39 @@
+.polaroid {
+	.image-wrapper {
+		position: relative;
+		display: inline-block;
+		overflow: unset;
+		border-radius: 3px 3px 1px 1px;
+		padding: 1.5em 1.5em 4em;
+		background-color: #fff;
+		//box-shadow: 0 2px 14px rgb(54 57 163 / 10%);
+		box-shadow: 0 3px 20px #d3d3d3;
+		border-width: 0;
+		&::before,
+		&::after {
+			content: '';
+			position: absolute;
+			width: 6em;
+			height: 0.65em;
+			transform: rotate(45deg);
+			background-color: rgba(255, 249, 193, 0.75);
+			backdrop-filter: blur(2px);
+			//box-shadow: 0 2px 14px rgb(54 57 163 / 10%);
+			box-shadow: unset #d3d3d3;
+			border-width: 0;
+		}
+		&::before {
+			bottom: 1.5em;
+			left: -1.25em;
+		}
+		&::after {
+			top: 1.5em;
+			right: -1.25em;
+		}
+		img {
+			width: 355px;
+			height: 370px;
+			object-fit: cover;
+		}
+	}
+}
