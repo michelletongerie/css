@@ -23,26 +23,16 @@
 	    return decodeURIComponent(results[2].replace(/\+/g, " "));
 	}
 	// Give the parameter a variable name
-	var dynamicContent = getParameterByName('dc');
+	var dynamicContent = getParameterByName('firstName');
  
 	 $(document).ready(function() {
  
-		// Check if the URL parameter is apples
-		if (dynamicContent == 'apples') {
-			$('#apples').show();
+		// Check if the URL parameter is Jonas
+		if (dynamicContent!== null) {
+			$('#apples').show('firstName');
 		} 
-		// Check if the URL parameter is oranges
-		else if (dynamicContent == 'oranges') {
-			$('#oranges').show();
-		} 
-		// Check if the URL parameter is bananas
-		else if (dynamicContent == 'bananas') {
-			$('#bananas').show();
-		} 
-		// Check if the URL parmeter is empty or not defined, display default content
-		else {
-			$('#default-content').show();
-		}
+
+
 	});
 </script>
 
