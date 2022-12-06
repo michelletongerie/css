@@ -1,0 +1,306 @@
+(RaiselyComponents) => {
+	const { Button, Dropdown } = RaiselyComponents.Atoms;
+	const { Link } = RaiselyComponents;
+
+	return class HeaderMenu extends React.Component {
+		state = {
+			active: false,
+			profiles: false,
+		};
+
+		async componentDidMount() {
+			const profiles = await this.props.api.users.meWithProfiles();
+			this.setState({
+				profiles: profiles ? profiles.body().data().data : [],
+			});
+		}
+
+		toggleButtonState = () => this.setState({ active: !this.state.active });
+
+		toDonate = (event) => {
+			event.preventDefault();
+			if (window.innerWidth > 768) {
+				const element = document.querySelectorAll(
+					".sponsor-me__numbers"
+				)[1];
+				element.scrollIntoView(true);
+			} else {
+				const element = document.querySelectorAll(
+					".sponsor-me__numbers"
+				)[0];
+				element.scrollIntoView(true);
+			}
+		};
+
+		render() {
+			const values = this.props.getValues();
+			const global = this.props.global;
+			const profileList = this.state.profiles;
+			const { config } = this.props.global.campaign;
+
+			const loggedOutItems = {
+				998: {
+					title: "LOG IN",
+					link: "/login/",
+					custom: true,
+				},
+				999: {
+					title: "JOIN US",
+					link: "/signup",
+					custom: true,
+				},
+			};
+
+			// const loggedOutFundraisingItems = {
+			// 	998: {
+			// 		title: "Log in",
+			// 		link: "/login/",
+			// 		custom: true,
+			// 	},
+			// 	999: {
+			// 		title: "Search for a participant or group",
+			// 		link: "/search/",
+			// 		custom: true,
+			// 	},
+			// };
+
+			const loggedInItems = {
+				991: {
+					title: "My Hub",
+					link: "/dashboard/",
+					custom: true,
+				},
+				// 992: {
+				// 	title: "Resources",
+				// 	link: "/resources/",
+				// 	custom: true,
+				// },
+				993: {
+					teams: true,
+					custom: true,
+				},
+				994: {
+					profiles: true,
+					custom: true,
+				},
+				995: {
+					title: "My Account",
+					link: "/account/details/",
+					custom: true,
+				},
+				// 996: {
+				// 	title: "Search for a participant or team",
+				// 	link: "/search/",
+				// 	custom: true,
+				// },
+				997: {
+					title: "Log out",
+					link: "/logout/",
+					custom: true,
+				},
+			};
+
+			const menuItems = {};
+
+			for (const index in config.menu) {
+				const link = config.menu[index];
+				menuItems[index] = {
+					title: link.title,
+					link: link.link,
+					subMenu: link.subMenu,
+				};
+			}
+
+			let items;
+			if (global.user === false) {
+				items = { ...menuItems, ...loggedOutItems };
+			} else {
+				items = { ...menuItems, ...loggedInItems };
+			}
+
+			// workaround for admin accounts with no profiles
+			if (global.user && !global.user.profile)
+				global.user.profile = {
+					parent: { path: global.campaign.path, public: {} },
+				};
+
+			const imageUrl =
+				global.user &&
+				global.user.profile &&
+				global.user.profile.photoUrl
+					? global.user.profile.photoUrl
+					: config.theme.defaultProfileUrl ||
+					  "https://storage.googleapis.com/raisely-assets/default-profile.svg";
+
+			return (
+				<nav className="custom-menu">
+					<div className="page-navigation">
+						<span>1 - 30 November</span>
+						{/* <Link class="button button--primary" to="/signup">
+							Join Us
+						</Link> */}
+						{global.current.profile && global.user === false && (
+							<a
+								className="button button--primary"
+								onClick={this.toDonate}
+							>
+								Sponsor Me
+							</a>
+						)}
+					</div>
+
+					{/* {global.current.profile && global.user === false && (
+						<a
+							className="button button--secondary sponsor-me"
+							onClick={this.toDonate}
+						>
+							Sponsor Me
+						</a>
+					)} */}
+
+					{global.user !== false && global.user !== {} && (
+						<Link to="/dashboard" className="custom-menu__user">
+							<span className="custom-menu__user-name">
+								{global.user.firstName} {global.user.lastName}
+							</span>
+							<span
+								className="profile-image__photo"
+								style={{
+									backgroundImage: `url(${
+										global.user.profile.photoUrl
+											? global.user.profile.photoUrl
+											: ""
+									})`,
+								}}
+							/>
+						</Link>
+					)}
+
+					<button
+						className={`custom-menu__ham custom-menu__ham--${
+							this.state.active ? "active" : "inactive"
+						}`}
+						type="button"
+						onClick={this.toggleButtonState}
+					>
+						<span></span>
+						<span></span>
+						<span></span>
+					</button>
+
+					<ul
+						className={`custom-menu__items custom-menu__items--${
+							this.state.active ? "active" : "inactive"
+						}`}
+					>
+						{Object.entries(items).map(([itemID, item], index) => (
+							<li
+								key={itemID}
+								className={`custom-menu__item custom-menu__item--${
+									item.link ? item.link.replace("/", "") : ""
+								}`}
+							>
+								{item.profiles &&
+									Object.entries(profileList)
+										.filter(
+											([profileID, profile]) =>
+												profile.type !== "GROUP"
+										)
+										.map(([profileID, profile]) => {
+											return (
+												<div className="custom-menu__item-group custom-menu__item-group--profiles">
+													<Link
+														className="custom-menu__item-link custom-menu__item-group-lead"
+														to={`/${profile.path}`}
+													>
+														<img
+															src={
+																profile.photoUrl
+																	? profile.photoUrl
+																	: ""
+															}
+														/>
+														<span>
+															My
+															{profile.type ==
+															"INDIVIDUAL"
+																? " Page"
+																: " Team"}
+														</span>
+													</Link>
+												</div>
+											);
+										})}
+								{item.teams &&
+									global.user.profile.parentUuid !==
+										global.campaign.profile.uuid &&
+									global.user.profile.parent && (
+										<div className="custom-menu__item-group custom-menu__item-group--profiles">
+											<Link
+												className="custom-menu__item-link custom-menu__item-group-lead"
+												to={`/${global.user.profile.parent.path}`}
+											>
+												<img
+													src={
+														global.user.profile
+															.parent.photoUrl
+															? global.user
+																	.profile
+																	.parent
+																	.photoUrl
+															: ""
+													}
+												/>
+												<span>My Team</span>
+											</Link>
+										</div>
+									)}
+								{!item.profiles &&
+									!item.teams &&
+									item.subMenu &&
+									item.subMenu.length > 0 && (
+										<div className="custom-menu__item-group">
+											<Link
+												className={`custom-menu__item-link custom-menu__item-group-lead custom-menu__item-link--${
+													item.custom
+														? "custom"
+														: "menu"
+												}`}
+												to={item.link}
+											>
+												{item.title}
+											</Link>
+											{item.subMenu.map((subItem) => (
+												<Link
+													className={`custom-menu__item-link custom-menu__item-group-item custom-menu__item-link--${
+														item.custom
+															? "custom"
+															: "menu"
+													}`}
+													to={subItem.link}
+												>
+													{subItem.title}
+												</Link>
+											))}
+										</div>
+									)}
+								{!item.profiles &&
+									!item.teams &&
+									(!item.subMenu || !item.subMenu.length) && (
+										<Link
+											className={`custom-menu__item-link custom-menu__item-link--${
+												item.custom ? "custom" : "menu"
+											}`}
+											to={item.link}
+										>
+											{item.title}
+										</Link>
+									)}
+							</li>
+						))}
+					</ul>
+				</nav>
+			);
+		}
+	};
+};
