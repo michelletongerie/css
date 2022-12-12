@@ -11365,6 +11365,13 @@ html {
   letter-spacing: 0.1rem;
 }
 
+.masthead p,
+.masthead-heading,
+.masthead-subheading
+{
+    text-shadow: black 0.1em 0.1em 0.2em;
+}
+
 header.masthead {
   position: relative;
   overflow: hidden;
